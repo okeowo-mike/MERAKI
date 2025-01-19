@@ -1,0 +1,220 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+  width: 1px;
+}
+
+header {
+  height: 100vh;
+}
+
+/* .main-container {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  height: 100vh;
+}
+
+.welcome-image {
+  height: 100vh;
+}
+
+img {
+  width: 100%; Fill the width of the container
+  height: 100%; Fill the height of the container
+  object-fit: cover; Crop while maintaining aspect ratio
+} */
+
+.main-container {
+  display: grid;
+  grid-template-columns: 2fr 2fr; /* Image takes up half the screen */
+  height: 100vh;
+}
+
+.welcome-image {
+  position: relative; /* Positioning context for the SVG */
+  height: 100vh; /* Full height of the container */
+}
+
+.welcome-image img {
+  width: 100%; /* Fill the width of the container */
+  height: 100%; /* Fill the height of the container */
+  object-fit: cover; /* Maintain aspect ratio and crop if needed */
+}
+
+.logo img {
+  margin: auto;
+  width: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  position: absolute; /* Place the SVG on top of the image */
+  top: 40%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for the logo's size */
+  z-index: 1; /* Ensure it is on top of the image */
+}
+
+svg path {
+  fill: transparent;
+  stroke: #fff;
+  /* stroke-width: 0.1; */
+  stroke-dasharray: 530;
+  stroke-dashoffset: 530;
+  animation: textAnimation 4s ease-in-out forwards; /* Infinite animation loop */
+}
+
+@keyframes textAnimation {
+  0% {
+    stroke-dashoffset: 530;
+  }
+  80% {
+    fill: transparent;
+  }
+
+  100% {
+    fill: #fff;
+    stroke-dashoffset: 0;
+  }
+}
+
+.pre-order {
+  padding-left: 3rem;
+  padding-top: 1rem;
+  /* padding-right: 1rem; */
+  /* margin: auto; */
+}
+
+.s1 h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  /* padding-top: 0.5rem; */
+}
+.s1 p {
+  font-size: 0.9rem;
+  padding-top: 0.5rem;
+  max-width: 500px;
+}
+
+.s2 {
+  display: flex;
+  padding-top: 3rem;
+  gap: 2rem;
+}
+
+.s2-card {
+  max-width: 250px;
+}
+.s2 h2 {
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+.s2 p {
+  font-size: 0.8rem;
+  padding-top: 0.3rem;
+}
+
+.s3 {
+  padding-top: 1rem;
+}
+
+/* .products {
+  padding-top: 1rem;
+} */
+
+.s3 form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  max-width: 500px;
+}
+
+.s3 input {
+  border: none; /* Remove all borders */
+  border-bottom: 1px solid #c5c5c5; /* Add a bottom border */
+  outline: none; /* Remove focus outline */
+  padding: 5px; /* Add some padding for better spacing */
+  font-size: 0.8rem; /* Adjust font size as needed */
+}
+
+input::placeholder {
+  color: #aaa; /* Placeholder color */
+}
+
+input[type="text"]:focus {
+  border-bottom: 2px solid #007bff; /* Change border color on focus */
+}
+
+.s3 button {
+  width: 120px;
+  height: 37px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: rgb(255, 255, 255);
+  border: 0.7px solid rgb(190, 190, 190);
+  color: rgb(255, 162, 178);
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.s3 button:hover {
+  background-color: rgb(255, 162, 178);
+  color: #fff;
+  transition: ease-in-out 0.5s;
+}
+
+.s4 {
+  padding-top: 2rem;
+}
+.s4 h2 {
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.s4 ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  padding-top: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.s4 ul li a {
+  text-decoration: none;
+  list-style: none;
+  color: #aaa;
+}
+.s4 ul li a:hover {
+  transition: ease-in-out 1s;
+  color: rgb(255, 162, 178);
+}
+
+/* /////////////////////// */
+
+select {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding inside the dropdown */
+  font-size: 13px; /* Font size for readability */
+  color: #aaa;
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  appearance: none; /* Removes default arrow styling (optional) */
+  margin-top: 1rem;
+}
+
+select:focus {
+  outline: none; /* Remove default outline */
+  border-color: #007bff; /* Highlight border on focus */
+}
+
+option {
+  padding: 5px; /* Adds spacing within dropdown options */
+}

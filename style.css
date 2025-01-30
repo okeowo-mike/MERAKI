@@ -220,7 +220,7 @@ option {
 }
 
 /* mobile /////////////////////////////////////////////// */
-@media (max-width: 500px) {
+@media (max-width: 1030px) {
   .main-container {
     display: flex;
     flex-direction: column-reverse;
@@ -228,7 +228,7 @@ option {
 
   .welcome-image img {
     width: 100vw; /* Fill the width of the container */
-    height: 170px; /* Fill the height of the container */
+    height: 200px; /* Fill the height of the container */
     object-fit: cover; /* Maintain aspect ratio and crop if needed */
   }
 
@@ -280,7 +280,7 @@ option {
     padding-top: 3rem;
     gap: 1.5rem;
   }
-  
+
   .s2-card {
     max-width: 180px;
   }

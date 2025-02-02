@@ -19,7 +19,11 @@
           </div>
 
           <div class="s3">
-            <form action="https://sheetdb.io/api/v1/8pn1lg9ijmesw" method="post" id="sheetdb-form">
+            <form
+              action="https://sheetdb.io/api/v1/8pn1lg9ijmesw"
+              method="post"
+              id="sheetdb-form"
+            >
               <label for="name"></label>
               <input
                 type="text"
@@ -47,23 +51,64 @@
                 required
               />
 
-              <!-- <label class="products" for="products">Product:</label> -->
-              <select
-                class="products"
-                id="products"
-                name="data[product]"
-                required
-              >
-                <option value="" disabled selected>
-                  Select a product here
-                </option>
-                <option value="product1">Product 1</option>
-                <option value="product2">Product 2</option>
-                <option value="product3">Product 3</option>
-                <option value="product4">Product 4</option>
-              </select>
+              <div class="products">
+                <!-- Shirt Sizes & Quantity -->
+                <div id="shirtOptions">
+                  <h3>Shirt Sizes</h3>
+                  <label
+                    >Small ($10):
+                    <input
+                      type="number"
+                      name="data[shirt-small]"
+                      min="0"
+                      value=""
+                  /></label>
+                  <label
+                    >Medium ($12):
+                    <input
+                      type="number"
+                      name="data[shirt-medium]"
+                      min="0"
+                      value=""
+                  /></label>
+                  <label
+                    >Large ($15):
+                    <input
+                      type="number"
+                      name="data[shirt-large]"
+                      min="0"
+                      value=""
+                  /></label>
+                </div>
+
+                <!-- Trousers Sizes & Quantity -->
+                <div id="trouserOptions">
+                  <h3>Trousers Sizes</h3>
+                  <label
+                    >Size 30 ($20):
+                    <input type="number" name="data[t-30]" min="0" value=""
+                  /></label>
+                  <label
+                    >Size 32 ($22):
+                    <input type="number" name="data[t-32]" min="0" value=""
+                  /></label>
+                  <label
+                    >Size 34 ($25):
+                    <input type="number" name="data[t-34]" min="0" value=""
+                  /></label>
+                </div>
+              </div>
+
+              <!-- Hidden input to store selected products -->
+              <input
+                type="hidden"
+                id="selected-products"
+                name="data[products]"
+              />
 
               <button type="submit">SUBMIT</button>
+              <!-- Total Price -->
+              <!-- <h3>Total Price: $<span id="totalPrice">0</span></h3> -->
             </form>
           </div>
 
@@ -119,20 +164,132 @@
     </header>
 
     <script>
-      var form = document.getElementById('sheetdb-form');
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    fetch(form.action, {
-        method : "POST",
-        body: new FormData(document.getElementById("sheetdb-form")),
-    }).then(
-        response => response.json()
-    ).then((html) => {
-      // you can put any JS code here
-      window.open('page2.html', '_blank');
+      var form = document.getElementById("sheetdb-form");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetch(form.action, {
+          method: "POST",
+          body: new FormData(document.getElementById("sheetdb-form")),
+        })
+          .then((response) => response.json())
+          .then((html) => {
+            // you can put any JS code here
+            window.open("page2.html", "_blank");
+          });
+      });
 
-    });
-  });
-  </script>
+      document
+        .querySelector(".dropdown-btn")
+        .addEventListener("click", function () {
+          this.parentElement.classList.toggle("active");
+        });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const checkboxes = document.querySelectorAll(".product-checkbox");
+        const hiddenInput = document.getElementById("selected-products");
+        const form = document.getElementById("sheetdb-form");
+        const dropdownBtn = document.querySelector(".dropdown-btn");
+        const dropdownContent = document.querySelector(".dropdown-content");
+
+        // Update hidden input when checkboxes change
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            let selected = Array.from(checkboxes)
+              .filter((cb) => cb.checked)
+              .map((cb) => cb.value)
+              .join(", ");
+            hiddenInput.value = selected; // Store selected products in hidden input
+          });
+        });
+
+        // // Toggle dropdown visibility
+        // dropdownBtn.addEventListener("click", function () {
+        //   dropdownContent.classList.toggle("active");
+        // });
+
+        // Submit form and send data to SheetDB
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          if (!hiddenInput.value) {
+            alert("Please select at least one product.");
+            return; // Stop submission if no product is selected
+          }
+
+          fetch(form.action, {
+            method: "POST",
+            body: new FormData(form),
+          })
+            .then((response) => response.json())
+            .then((html) => {
+              // Redirect to the next page after successful submission
+              window.open("page2.html", "_blank");
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+      });
+
+      // ///////////////////////////////////////////////
+      document.addEventListener("DOMContentLoaded", function () {
+        const totalPriceEl = document.getElementById("totalPrice");
+
+        const prices = {
+          shirt_s: 10,
+          shirt_m: 12,
+          shirt_l: 15,
+          trousers_30: 20,
+          trousers_32: 22,
+          trousers_34: 25,
+        };
+
+        function calculateTotal() {
+          let total = 0;
+          const formData = new FormData(
+            document.getElementById("preOrderForm")
+          );
+
+          formData.forEach((value, key) => {
+            if (prices[key] && value > 0) {
+              total += prices[key] * parseInt(value);
+            }
+          });
+
+          totalPriceEl.textContent = total;
+        }
+
+        document
+          .getElementById("preOrderForm")
+          .addEventListener("input", calculateTotal);
+
+        document
+          .getElementById("preOrderForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const orderData = {};
+
+            formData.forEach((value, key) => {
+              if (value > 0) orderData[key] = value;
+            });
+
+            orderData["total_price"] = totalPriceEl.textContent;
+
+            fetch("YOUR_SHEETDB_URL_HERE", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ data: orderData }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                alert("Order submitted successfully!");
+                window.location.href = "order-summary.html";
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+      });
+    </script>
   </body>
 </html>

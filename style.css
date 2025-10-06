@@ -423,13 +423,7 @@ label {
 /* ===== FOOTER WRAPPER ===== */
 .footer-section {
   margin-top: 15rem;
-  /* background: #fff;
-  border-top: 1px solid #ddd; */
-  /* position:; */
   bottom: 0;
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
-  /* width: 40vw;  */
   min-width: 360px;
   max-width: 45%;
   padding: auto;

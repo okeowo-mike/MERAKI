@@ -51,59 +51,68 @@
                 required
               />
 
-              <div class="products">
-                <!-- Shirt Sizes & Quantity -->
-                <div id="shirtOptions">
-                  <h3>Shirt Sizes</h3>
-                  <label
-                    >Small ($10):
-                    <input
-                      type="number"
-                      name="data[shirt-small]"
-                      min="0"
-                      value=""
-                  /></label>
-                  <label
-                    >Medium ($12):
-                    <input
-                      type="number"
-                      name="data[shirt-medium]"
-                      min="0"
-                      value=""
-                  /></label>
-                  <label
-                    >Large ($15):
-                    <input
-                      type="number"
-                      name="data[shirt-large]"
-                      min="0"
-                      value=""
-                  /></label>
+              <!-- Modernized Product Selection Section -->
+              <div class="products-modern">
+                <!-- Shirt Selection Card -->
+                <div class="product-card">
+                  <h3>Shirt</h3>
+                  <div class="form-group">
+                    <label for="shirt-size">Size</label>
+                    <select id="shirt-size">
+                      <option value="" disabled selected>Select size</option>
+                      <option value="small" data-price="10">Small ($10)</option>
+                      <option value="medium" data-price="12">
+                        Medium ($12)
+                      </option>
+                      <option value="large" data-price="15">Large ($15)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="shirt-qty">Quantity</label>
+                    <input type="number" id="shirt-qty" min="1" value="0" />
+                  </div>
+                  <div class="form-group">
+                    <span id="shirt-price">Price: $0</span>
+                  </div>
+                  <button type="button" id="add-shirt">Add Shirt</button>
                 </div>
-
-                <!-- Trousers Sizes & Quantity -->
-                <div id="trouserOptions">
-                  <h3>Trousers Sizes</h3>
-                  <label
-                    >Size 30 ($20):
-                    <input type="number" name="data[t-30]" min="0" value=""
-                  /></label>
-                  <label
-                    >Size 32 ($22):
-                    <input type="number" name="data[t-32]" min="0" value=""
-                  /></label>
-                  <label
-                    >Size 34 ($25):
-                    <input type="number" name="data[t-34]" min="0" value=""
-                  /></label>
+                <!-- Trousers Selection Card -->
+                <div class="product-card">
+                  <h3>Trousers</h3>
+                  <div class="form-group">
+                    <label for="trouser-size">Size</label>
+                    <select id="trouser-size">
+                      <option value="" disabled selected>Select size</option>
+                      <option value="30" data-price="20">Size 30 ($20)</option>
+                      <option value="32" data-price="22">Size 32 ($22)</option>
+                      <option value="34" data-price="25">Size 34 ($25)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="trouser-qty">Quantity</label>
+                    <input type="number" id="trouser-qty" min="1" value="0" />
+                  </div>
+                  <div class="form-group">
+                    <span id="trouser-price">Price: $0</span>
+                  </div>
+                  <button type="button" id="add-trouser">Add Trousers</button>
                 </div>
               </div>
-
-              <!-- Hidden input to store selected products -->
+              <!-- Order Summary Section -->
+              <div class="order-summary">
+                <h3>Order Summary</h3>
+                <ul id="order-list">
+                  <!-- Items will be added here dynamically -->
+                </ul>
+                <div class="form-group">
+                  <strong>Total: $<span id="order-total">0</span></strong>
+                </div>
+              </div>
+              <!-- Hidden input to store order summary for form submission -->
               <input
                 type="hidden"
-                id="selected-products"
-                name="data[products]"
+                id="order-summary-input"
+                name="data[order_summary]"
               />
 
               <button type="submit">SUBMIT</button>
@@ -113,32 +122,10 @@
           </div>
 
           <div class="s2">
-            <div class="address s2-card">
-              <h2>ADDRESS</h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Praesentium, eos.
-              </p>
-            </div>
-            <div class="phone s2-card">
-              <h2>PHONE</h2>
-              <p>000 000 0000</p>
-            </div>
-            <div class="email s2-card">
-              <h2>EMAIL</h2>
-              <p>jjjj@gmail.com</p>
-            </div>
+            <!-- Removed: address, phone, email cards (now in footer) -->
           </div>
 
-          <div class="s4">
-            <h2>FOLLOW US HERE</h2>
-            <ul>
-              <li><a href="">FACEBOOK</a></li>
-              <li><a href="">TWITTER</a></li>
-              <li><a href="">INSTAGRAM</a></li>
-              <li><a href="">PINTEREST</a></li>
-            </ul>
-          </div>
+          <!-- Removed: .s4 social section (now in footer) -->
         </div>
 
         <div class="welcome-image">
@@ -162,6 +149,120 @@
         </div>
       </div>
     </header>
+
+    <!--///////////// Modern Product Selection JS -->
+    <script>
+      // Prices for each product/size
+      const prices = {
+        shirt: { small: 10, medium: 12, large: 15 },
+        trouser: { 30: 20, 32: 22, 34: 25 },
+      };
+
+      // Elements for Shirt
+      const shirtSize = document.getElementById("shirt-size");
+      const shirtQty = document.getElementById("shirt-qty");
+      const shirtPrice = document.getElementById("shirt-price");
+      const addShirtBtn = document.getElementById("add-shirt");
+
+      // Elements for Trouser
+      const trouserSize = document.getElementById("trouser-size");
+      const trouserQty = document.getElementById("trouser-qty");
+      const trouserPrice = document.getElementById("trouser-price");
+      const addTrouserBtn = document.getElementById("add-trouser");
+
+      // Order summary
+      const orderList = document.getElementById("order-list");
+      const orderTotal = document.getElementById("order-total");
+      const orderSummaryInput = document.getElementById("order-summary-input");
+
+      // Store order items
+      let orderItems = [];
+
+      // Update price display for shirt
+      function updateShirtPrice() {
+        const size = shirtSize.value;
+        const qty = parseInt(shirtQty.value) || 1;
+        if (prices.shirt[size]) {
+          shirtPrice.textContent = `Price: $${prices.shirt[size] * qty}`;
+        } else {
+          shirtPrice.textContent = "Price: $0";
+        }
+      }
+      // Update price display for trouser
+      function updateTrouserPrice() {
+        const size = trouserSize.value;
+        const qty = parseInt(trouserQty.value) || 1;
+        if (prices.trouser[size]) {
+          trouserPrice.textContent = `Price: $${prices.trouser[size] * qty}`;
+        } else {
+          trouserPrice.textContent = "Price: $0";
+        }
+      }
+      // Event listeners for price updates
+      shirtSize.addEventListener("change", updateShirtPrice);
+      shirtQty.addEventListener("input", updateShirtPrice);
+      trouserSize.addEventListener("change", updateTrouserPrice);
+      trouserQty.addEventListener("input", updateTrouserPrice);
+
+      // Add shirt to order summary
+      addShirtBtn.addEventListener("click", function () {
+        const size = shirtSize.value;
+        const qty = parseInt(shirtQty.value);
+        if (!size || !qty || qty < 1) {
+          alert("Please select a shirt size and quantity.");
+          return;
+        }
+        const price = prices.shirt[size] * qty;
+        orderItems.push({ type: "Shirt", size, qty, price });
+        renderOrderList();
+      });
+      // Add trouser to order summary
+      addTrouserBtn.addEventListener("click", function () {
+        const size = trouserSize.value;
+        const qty = parseInt(trouserQty.value);
+        if (!size || !qty || qty < 1) {
+          alert("Please select a trouser size and quantity.");
+          return;
+        }
+        const price = prices.trouser[size] * qty;
+        orderItems.push({ type: "Trousers", size, qty, price });
+        renderOrderList();
+      });
+      // Render order summary list
+      function renderOrderList() {
+        orderList.innerHTML = "";
+        let total = 0;
+        orderItems.forEach((item, idx) => {
+          total += item.price;
+          const li = document.createElement("li");
+          li.innerHTML = `${item.type} - Size: <strong>${item.size}</strong>, Qty: <strong>${item.qty}</strong>, $${item.price} <button class='remove-item-btn' data-idx='${idx}' title='Remove'>&times;</button>`;
+          orderList.appendChild(li);
+        });
+        orderTotal.textContent = total;
+        // Store summary as JSON for form submission
+        orderSummaryInput.value = JSON.stringify(orderItems);
+      }
+      // Remove item from order summary
+      orderList.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-item-btn")) {
+          const idx = parseInt(e.target.getAttribute("data-idx"));
+          orderItems.splice(idx, 1);
+          renderOrderList();
+        }
+      });
+      // On form submit, check if at least one item is in the order
+      document
+        .getElementById("sheetdb-form")
+        .addEventListener("submit", function (e) {
+          if (orderItems.length === 0) {
+            e.preventDefault();
+            alert("Please add at least one item to your order.");
+          }
+        });
+      // Initialize price displays
+      updateShirtPrice();
+      updateTrouserPrice();
+    </script>
 
     <script>
       var form = document.getElementById("sheetdb-form");
@@ -291,5 +392,40 @@
           });
       });
     </script>
+
+<footer class="footer-section">
+  <div class="footer-content">
+    <div class="s2">
+      <div class="address s2-card">
+        <h2>ADDRESS</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          Praesentium, eos.
+        </p>
+      </div>
+      <div class="phone s2-card">
+        <h2>PHONE</h2>
+        <p>000 000 0000</p>
+      </div>
+      <div class="email s2-card">
+        <h2>EMAIL</h2>
+        <p>jjjj@gmail.com</p>
+      </div>
+    </div>
+
+    <div class="s4">
+      <h2>FOLLOW US HERE</h2>
+      <ul>
+        <li><a href="#">FACEBOOK</a></li>
+        <li><a href="#">TWITTER</a></li>
+        <li><a href="#">INSTAGRAM</a></li>
+        <li><a href="#">PINTEREST</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+
+</div>
   </body>
 </html>
